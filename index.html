@@ -4,41 +4,60 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Career & Resume Tailorer</title>
-    <style>
-        body { font-family: system-ui, sans-serif; max-width: 750px; margin: 40px auto; padding: 20px; background-color: #f8f9fa; color: #333; }
-        h1 { color: #1a1a1a; margin-bottom: 5px; }
-        p { color: #666; margin-bottom: 25px; }
-        label { display: block; font-weight: bold; margin-bottom: 8px; margin-top: 15px; color: #444; }
-        textarea, input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; box-sizing: border-box; margin-bottom: 10px; font-family: inherit; }
-        textarea { height: 100px; resize: vertical; }
-        button { background-color: #0f172a; color: white; padding: 12px 24px; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; margin-top: 15px; width: 100%; }
-        button:hover { background-color: #1e293b; }
-        #result { margin-top: 25px; padding: 20px; background: white; border-radius: 6px; border-left: 4px solid #0f172a; box-shadow: 0 1px 3px rgba(0,0,0,0.1); white-space: pre-wrap; line-height: 1.6; display: none; }
-    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col justify-between">
 
-    <h1>AI Career & Resume Tailorer</h1>
-    <p>Optimize your profile for specific job descriptions and generate custom cover letters instantly.</p>
+    <div class="max-w-3xl mx-auto px-4 py-12 w-full">
+        <!-- Header -->
+        <header class="mb-8 text-center">
+            <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">AI Career & Resume Tailorer</h1>
+            <p class="text-slate-600 mt-2">Optimize your professional profile for specific job descriptions and generate tailored cover letters instantly.</p>
+        </header>
 
-    <label for="jobDesc">Job Description or Role Title:</label>
-    <textarea id="jobDesc" placeholder="Paste the job description or enter the target title here..."></textarea>
+        <!-- Main Card -->
+        <main class="bg-white shadow-xl rounded-2xl p-6 md:p-8 border border-slate-100">
+            <div class="space-y-6">
+                <div>
+                    <label for="jobDesc" class="block text-sm font-semibold text-slate-700 mb-2">Job Description or Role Title</label>
+                    <textarea id="jobDesc" rows="4" class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition text-sm" placeholder="Paste the job description or enter the target title here..."></textarea>
+                </div>
 
-    <label for="userSkills">Current Skills & Experience:</label>
-    <textarea id="userSkills" placeholder="List your projects, past work experience, tech stack, or general skills..."></textarea>
+                <div>
+                    <label for="userSkills" class="block text-sm font-semibold text-slate-700 mb-2">Current Skills & Experience</label>
+                    <textarea id="userSkills" rows="4" class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition text-sm" placeholder="List your projects, past work experience, tech stack, or student background..."></textarea>
+                </div>
 
-    <label for="targetIndustry">Target Industry:</label>
-    <input type="text" id="targetIndustry" placeholder="e.g., Software Engineering, Data Science, IT...">
+                <div>
+                    <label for="targetIndustry" class="block text-sm font-semibold text-slate-700 mb-2">Target Industry</label>
+                    <input type="text" id="targetIndustry" class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition text-sm" placeholder="e.g., Healthcare, Software Engineering, Finance...">
+                </div>
 
-    <button id="generateBtn">Generate Tailored Materials</button>
+                <button id="generateBtn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-200 shadow-md hover:shadow-lg flex items-center justify-center space-x-2">
+                    <span>Generate Tailored Materials</span>
+                </button>
+            </div>
 
-    <div id="result"></div>
+            <!-- Result Box -->
+            <div id="resultContainer" class="mt-8 hidden">
+                <h2 class="text-lg font-bold text-slate-900 mb-3">Generated Results</h2>
+                <div id="result" class="bg-slate-50 border border-slate-200 rounded-lg p-5 text-sm whitespace-pre-wrap leading-relaxed text-slate-700"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer with Developer Name -->
+    <footer class="text-center py-6 text-xs text-slate-500 border-t border-slate-200 bg-white">
+        Designed and Developed by <span class="font-semibold text-slate-700">Sadia Shabeer</span>
+    </footer>
 
     <script>
         document.getElementById('generateBtn').addEventListener('click', async () => {
             const jobDesc = document.getElementById('jobDesc').value.trim();
             const userSkills = document.getElementById('userSkills').value.trim();
             const targetIndustry = document.getElementById('targetIndustry').value.trim();
+            const btn = document.getElementById('generateBtn');
+            const resultContainer = document.getElementById('resultContainer');
             const resultDiv = document.getElementById('result');
 
             if (!jobDesc || !userSkills) {
@@ -46,8 +65,10 @@
                 return;
             }
 
-    @content    resultDiv.style.display = "block";
-            resultDiv.innerText = "Analyzing job requirements and tailoring your profile...";
+            btn.disabled = true;
+            btn.innerHTML = <span>Analyzing and generating...</span>;
+            resultContainer.classList.remove('hidden');
+            resultDiv.innerText = "Processing request with AI engine...";
 
             try {
                 const response = await fetch('/api/tailor', {
@@ -65,7 +86,10 @@
                 }
             } catch (error) {
                 console.error("Error:", error);
-                resultDiv.innerText = "A connection error occurred.";
+                resultDiv.innerText = "A connection error occurred. Please check network connectivity.";
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = <span>Generate Tailored Materials</span>;
             }
         });
     </script>
