@@ -14,19 +14,12 @@
         button { background-color: #0f172a; color: white; padding: 12px 24px; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; margin-top: 15px; width: 100%; }
         button:hover { background-color: #1e293b; }
         #result { margin-top: 25px; padding: 20px; background: white; border-radius: 6px; border-left: 4px solid #0f172a; box-shadow: 0 1px 3px rgba(0,0,0,0.1); white-space: pre-wrap; line-height: 1.6; display: none; }
-        .key-box { background: #e2e8f0; padding: 15px; border-radius: 6px; margin-bottom: 20px; }
     </style>
 </head>
 <body>
 
     <h1>AI Career & Resume Tailorer</h1>
     <p>Optimize your profile for specific job descriptions and generate custom cover letters instantly.</p>
-
-    <div class="key-box">
-        <label for="apiKey">Groq API Key:</label>
-        <input type="password" id="apiKey" placeholder="gsk_...">
-        <small style="color: #555;">Your key stays in your browser session only.</small>
-    </div>
 
     <label for="jobDesc">Job Description or Role Title:</label>
     <textarea id="jobDesc" placeholder="Paste the job description or enter the target title here..."></textarea>
@@ -41,6 +34,40 @@
 
     <div id="result"></div>
 
-    <script src="evaluate.js"></script>
+    <script>
+        document.getElementById('generateBtn').addEventListener('click', async () => {
+            const jobDesc = document.getElementById('jobDesc').value.trim();
+            const userSkills = document.getElementById('userSkills').value.trim();
+            const targetIndustry = document.getElementById('targetIndustry').value.trim();
+            const resultDiv = document.getElementById('result');
+
+            if (!jobDesc || !userSkills) {
+                alert("Please fill in both the job description and your skills.");
+                return;
+            }
+
+    @content    resultDiv.style.display = "block";
+            resultDiv.innerText = "Analyzing job requirements and tailoring your profile...";
+
+            try {
+                const response = await fetch('/api/tailor', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ jobDesc, userSkills, targetIndustry })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerText = data.result;
+                } else {
+                    resultDiv.innerText = "Error: " + (data.error || "Failed to generate.");
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                resultDiv.innerText = "A connection error occurred.";
+            }
+        });
+    </script>
 </body>
 </html>
