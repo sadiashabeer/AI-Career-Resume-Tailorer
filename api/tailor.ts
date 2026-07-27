@@ -2,16 +2,42 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import Groq from "groq-sdk";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+  );
+
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
+
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
   try {
-    const { jobDesc, userSkills, targetIndustry } = req.body;
+    let body = req.body;
+    if (typeof body === 'string') {
+      try {
+        body = JSON.parse(body);
+      } catch (e) {
+        body = {};
+      }
+    }
+
+    const { jobDesc, userSkills, targetIndustry } = body || {};
     const apiKey = process.env.GROQ_API_KEY;
 
     if (!apiKey) {
       return res.status(500).json({ error: "GROQ_API_KEY is missing on the server environment." });
+    }
+
+    if (!jobDesc || !userSkills) {
+      return res.status(400).json({ error: "Missing required fields: jobDesc and userSkills." });
     }
 
     const ai = new Groq({ apiKey });
@@ -25,7 +51,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         },
         {
           role: "user",
-          content: "Target Industry: " + targetIndustry + "\n\nJob Description / Role:\n" + jobDesc + "\n\nMy Skills & Experience:\n" + userSkills
+          content: "Target Industry: " + (targetIndustry || "General") + "\n\nJob Description / Role:\n" + jobDesc + "\n\nMy Skills & Experience:\n" + userSkills
         }
       ]
     });
