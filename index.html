@@ -86,8 +86,8 @@
                     resultDiv.innerText = "Error: " + (data.error || "Failed to generate response.");
                 }
             } catch (error) {
-                console.error("Error:", error);
-                resultDiv.innerText = "A network error occurred while connecting to the API server.";
+                console.error("Fetch Error:", error);
+                resultDiv.innerText = "Network Error: " + error.message;
             } finally {
                 btn.disabled = false;
                 btn.classList.remove('opacity-50', 'cursor-not-allowed');
