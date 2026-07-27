@@ -32,7 +32,7 @@ app.post("/api/tailor", async (req, res) => {
         },
         {
           role: "user",
-          content: Target Industry: ${targetIndustry}\n\nJob Description / Role:\n${jobDesc}\n\nMy Skills & Experience:\n${userSkills}
+          content: "Target Industry: " + targetIndustry + "\n\nJob Description / Role:\n" + jobDesc + "\n\nMy Skills & Experience:\n" + userSkills
         }
       ]
     });
