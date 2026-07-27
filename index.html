@@ -33,7 +33,7 @@
                     <input type="text" id="targetIndustry" class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition text-sm" placeholder="e.g., Healthcare, Software Engineering, Finance...">
                 </div>
 
-                <button id="generateBtn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-200 shadow-md hover:shadow-lg flex items-center justify-center space-x-2">
+                <button id="generateBtn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-200 shadow-md hover:shadow-lg flex items-center justify-center space-x-2 cursor-pointer">
                     <span>Generate Tailored Materials</span>
                 </button>
             </div>
@@ -66,6 +66,7 @@
             }
 
             btn.disabled = true;
+            btn.classList.add('opacity-50', 'cursor-not-allowed');
             btn.innerHTML = <span>Analyzing and generating...</span>;
             resultContainer.classList.remove('hidden');
             resultDiv.innerText = "Processing request with AI engine...";
@@ -82,13 +83,14 @@
                 if (response.ok) {
                     resultDiv.innerText = data.result;
                 } else {
-                    resultDiv.innerText = "Error: " + (data.error || "Failed to generate.");
+                    resultDiv.innerText = "Error: " + (data.error || "Failed to generate response.");
                 }
             } catch (error) {
                 console.error("Error:", error);
-                resultDiv.innerText = "A connection error occurred. Please check network connectivity.";
+                resultDiv.innerText = "A network error occurred while connecting to the API server.";
             } finally {
                 btn.disabled = false;
+                btn.classList.remove('opacity-50', 'cursor-not-allowed');
                 btn.innerHTML = <span>Generate Tailored Materials</span>;
             }
         });
