@@ -8,23 +8,19 @@ const PORT = 3000;
 
 app.use(express.json({ limit: "20mb" }));
 
-// Initialize Groq client securely from environment variables
 function getAiClient() {
   const apiKey = process.env.GROQ_API_KEY;
-  if (!apiKey) {
-    return null;
-  }
+  if (!apiKey) return null;
   return new Groq({ apiKey });
 }
 
-// API Route for Resume Tailoring
 app.post("/api/tailor", async (req, res) => {
   try {
     const { jobDesc, userSkills, targetIndustry } = req.body;
     const ai = getAiClient();
 
     if (!ai) {
-      return res.status(500).json({ error: "GROQ_API_KEY is not configured on the server." });
+      return res.status(500).json({ error: "GROQ_API_KEY is missing on the server environment." });
     }
 
     const chatCompletion = await ai.chat.completions.create({
@@ -50,7 +46,6 @@ app.post("/api/tailor", async (req, res) => {
   }
 });
 
-// Vite server integration for frontend
 async function startServer() {
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({
