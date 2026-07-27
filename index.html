@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Career & Resume Tailorer</title>
+    <style>
+        body { font-family: system-ui, sans-serif; max-width: 750px; margin: 40px auto; padding: 20px; background-color: #f8f9fa; color: #333; }
+        h1 { color: #1a1a1a; margin-bottom: 5px; }
+        p { color: #666; margin-bottom: 25px; }
+        label { display: block; font-weight: bold; margin-bottom: 8px; margin-top: 15px; color: #444; }
+        textarea, input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; box-sizing: border-box; margin-bottom: 10px; font-family: inherit; }
+        textarea { height: 100px; resize: vertical; }
+        button { background-color: #0f172a; color: white; padding: 12px 24px; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; margin-top: 15px; width: 100%; }
+        button:hover { background-color: #1e293b; }
+        #result { margin-top: 25px; padding: 20px; background: white; border-radius: 6px; border-left: 4px solid #0f172a; box-shadow: 0 1px 3px rgba(0,0,0,0.1); white-space: pre-wrap; line-height: 1.6; display: none; }
+        .key-box { background: #e2e8f0; padding: 15px; border-radius: 6px; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+
+    <h1>AI Career & Resume Tailorer</h1>
+    <p>Optimize your profile for specific job descriptions and generate custom cover letters instantly.</p>
+
+    <div class="key-box">
+        <label for="apiKey">Groq API Key:</label>
+        <input type="password" id="apiKey" placeholder="gsk_...">
+        <small style="color: #555;">Your key stays in your browser session only.</small>
+    </div>
+
+    <label for="jobDesc">Job Description or Role Title:</label>
+    <textarea id="jobDesc" placeholder="Paste the job description or enter the target title here..."></textarea>
+
+    <label for="userSkills">Current Skills & Experience:</label>
+    <textarea id="userSkills" placeholder="List your projects, past work experience, tech stack, or general skills..."></textarea>
+
+    <label for="targetIndustry">Target Industry:</label>
+    <input type="text" id="targetIndustry" placeholder="e.g., Software Engineering, Data Science, IT...">
+
+    <button id="generateBtn">Generate Tailored Materials</button>
+
+    <div id="result"></div>
+
+    <script src="evaluate.js"></script>
+</body>
+</html>
